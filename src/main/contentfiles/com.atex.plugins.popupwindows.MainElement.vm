@@ -1,0 +1,103 @@
+#set($popupWindowsId = "popupWindows_" + $m.local.controllerContext.renderId + "_" + $content.contentId.contentId.contentIdString.replaceAll('\.', '_'))
+
+<script>
+  jQuery(document).ready(function() {
+    //select all the a tag with name equal to modal
+    jQuery('a[name=modal]').click(function(e) {
+      //Cancel the link behavior
+      e.preventDefault();
+      //Get the A tag
+
+      var id = jQuery(this).attr('href');
+      popItUp(id);
+    });
+
+    #if($content.splash)
+      #if($content.splash=="true")
+      var gId = jQuery('a[name=modal]').attr('href');
+      popItUp(gId);
+      #end
+    #end
+
+    jQuery("#boxes #dialog").css({"background-color":"$content.bgColor"});
+    jQuery("#mask").css({"background-color":"$content.maskColor"});
+
+    //if close button is clicked
+    jQuery('.window .close').click(function (e) {
+      //Cancel the link behavior
+      e.preventDefault();
+      jQuery('#mask, .window').hide();
+    });
+
+    //if mask is clicked
+    jQuery('#mask').click(function () {
+      jQuery(this).hide();
+      jQuery('.window').hide();
+    });
+
+  });
+
+  function popItUp(id) {
+
+      //Get the screen height and width
+      var maskHeight = jQuery(document).height();
+      var maskWidth = jQuery(document).width();
+
+      //Set height and width to mask to fill up the whole screen
+      jQuery('#mask').css({"height":"100%", "width":"100%"});
+
+      //transition effect
+      jQuery('#mask').fadeIn(1000);
+      jQuery('#mask').fadeTo("fast",0.8);
+      jQuery('#mask').css({"display":"block"});
+
+      //Get the window height and width
+      var winH = jQuery(window).height();
+      var winW = jQuery(window).width();
+
+      var idWidth =jQuery(id).width();
+      var idHeight = jQuery(id).height();
+
+      //Set the popup window to center
+      jQuery("#boxes, #dialog").css({"width":idWidth});
+      jQuery(id).css('top',  winH/2-idHeight/2);
+      jQuery(id).css('left', winW/2-idWidth/2);
+
+      //transition effect
+      jQuery(id).fadeIn(2000);
+
+  }
+  
+</script>
+
+<link rel="stylesheet" type="text/css" href="#file({'contentId': $filesContentId, 'filename':'com.atex.plugins.popupwindows.MainElement.css', '':''})" />
+
+<div class="popupwindows-plugin_MainElement">
+
+  #set($list = $content.contentlist.list)
+  #foreach($entry in $list)
+    #if($velocityCount==1)
+      <div>
+        #render({"contentId":$entry.content.contentId, "":""})
+      </div>
+    #end
+  #end
+  <a href="#dialog" name="modal">More ... </a>
+</div>
+
+<div id="boxes">
+  <!-- modal window here -->
+  <div id="dialog" class="window">
+      #foreach($entry in $list)
+        #if($velocityCount==1)
+          <div>
+            #render({"contentId":$entry.content.contentId, "view":"article", "":""})
+          </div>
+        #end
+      #end
+      <!-- close -->
+      <a href="#" class="close">Close it</a>
+  </div>
+  <!-- to fill the whole screen --> 
+  <div id="mask"></div>
+</div>

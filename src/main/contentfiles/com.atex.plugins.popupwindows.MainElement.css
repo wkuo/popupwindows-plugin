@@ -1,0 +1,31 @@
+.popupwindows-plugin_MainElement {
+  border: 1px solid ;
+  padding: 5px;
+
+}
+
+/* Z-index of #mask must lower than #boxes .window */
+#mask {
+  position:fixed;
+  z-index:9000;
+  background-color:#000000;
+  display:none;
+  top:0px;
+  left:0px;
+  width:100%;
+  height:100%;
+  resize:both;
+}
+
+#boxes .window {
+  position:fixed;
+  display:none;
+  z-index:9999;
+  padding:20px;
+}
+
+
+/* modal window */
+#boxes #dialog {
+}
+
